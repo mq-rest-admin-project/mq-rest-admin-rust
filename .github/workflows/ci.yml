@@ -47,8 +47,6 @@ jobs:
     with:
       language: rust
       versions: ${{ inputs.rust-versions || '["1.92", "1.93"]' }}
-      container-suffix: base
-      container-tag: 'latest'
 
   integration-tests:
     name: "test / integration / ${{ matrix.rust-version }}"
@@ -93,8 +91,6 @@ jobs:
     with:
       language: rust
       versions: ${{ inputs.rust-versions || '["1.92", "1.93"]' }}
-      container-suffix: base
-      container-tag: 'latest'
 
   security:
     uses: vergil-project/vergil-actions/.github/workflows/ci-security.yml@v2.0
@@ -102,8 +98,6 @@ jobs:
       language: rust
       run-standards: ${{ inputs.run-release != 'false' }}
       run-security: ${{ inputs.run-security != 'false' }}
-      container-suffix: base
-      container-tag: 'latest'
     permissions:
       contents: read
       security-events: write
@@ -145,5 +139,3 @@ jobs:
     with:
       language: rust
       run-release: ${{ inputs.run-release != 'false' }}
-      container-suffix: base
-      container-tag: 'latest'
