@@ -47,7 +47,7 @@ jobs:
     with:
       language: rust
       versions: ${{ inputs.rust-versions || '["1.92", "1.93"]' }}
-      container-suffix: rust
+      container-suffix: base
       container-tag: 'latest'
 
   integration-tests:
@@ -93,7 +93,7 @@ jobs:
     with:
       language: rust
       versions: ${{ inputs.rust-versions || '["1.92", "1.93"]' }}
-      container-suffix: rust
+      container-suffix: base
       container-tag: 'latest'
 
   security:
@@ -102,7 +102,7 @@ jobs:
       language: rust
       run-standards: ${{ inputs.run-release != 'false' }}
       run-security: ${{ inputs.run-security != 'false' }}
-      container-suffix: rust
+      container-suffix: base
       container-tag: 'latest'
     permissions:
       contents: read
@@ -145,5 +145,5 @@ jobs:
     with:
       language: rust
       run-release: ${{ inputs.run-release != 'false' }}
-      container-suffix: rust
+      container-suffix: base
       container-tag: 'latest'
