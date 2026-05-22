@@ -47,6 +47,7 @@ jobs:
     with:
       language: rust
       versions: ${{ inputs.rust-versions || '["1.92", "1.93"]' }}
+      container-suffix: rust
 
   integration-tests:
     name: "test / integration / ${{ matrix.rust-version }}"
