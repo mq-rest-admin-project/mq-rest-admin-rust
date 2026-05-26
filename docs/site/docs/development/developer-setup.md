@@ -65,11 +65,8 @@ cargo build
 # Run tests
 cargo test
 
-# Enable standard tooling and git hooks
-cd ../vergil-tooling && uv sync
-export PATH="../vergil-tooling/.venv/bin:../vergil-tooling/scripts/bin:$PATH"
-cd ../mq-rest-admin-rust
-git config core.hooksPath ../vergil-tooling/scripts/lib/git-hooks
+# The Claude Code hook guard (.claude/hooks/guard.sh) blocks raw
+# git/gh commands — use vrg-git / vrg-gh wrappers.
 ```
 
 ## Running validation
