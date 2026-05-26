@@ -101,8 +101,11 @@ translation between Rust idioms and native MQSC parameter names.
 
 ### Environment Setup
 
+The Claude Code PreToolUse hook guard (`.claude/hooks/guard.sh`)
+blocks raw `git` and `gh` commands — use `vrg-git` / `vrg-gh`
+wrappers.
+
 ```bash
-git config core.hooksPath .githooks  # Enable the pre-commit gate
 rustup show
 ```
 
