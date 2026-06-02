@@ -17,7 +17,7 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
         .unwrap_or_else(|_| "https://localhost:9483/ibmmq/rest/v2".into());
     let qmgr_name = env::var("MQ_QMGR_NAME").unwrap_or_else(|_| "QM1".into());
     let username = env::var("MQ_ADMIN_USER").unwrap_or_else(|_| "mqadmin".into());
-    let password = env::var("MQ_ADMIN_PASSWORD").unwrap_or_else(|_| "mqadmin".into());
+    let password = env::var("MQ_ADMIN_PASSWORD")?;
 
     let mut session = MqRestSession::builder(
         &rest_base_url,

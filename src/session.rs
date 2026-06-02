@@ -1702,37 +1702,35 @@ mod tests {
 
     #[test]
     fn builder_certificate_missing_key_file() {
-        // Create a temp cert file
-        let cert_path = std::env::temp_dir().join("test_cert_session.pem");
-        std::fs::write(&cert_path, b"fake-cert").unwrap();
+        // Securely create a uniquely named temp cert file (auto-removed on drop).
+        let mut cert = tempfile::NamedTempFile::new().unwrap();
+        std::io::Write::write_all(&mut cert, b"fake-cert").unwrap();
         let result = MqRestSession::builder(
             "https://host/ibmmq/rest/v2",
             "QM1",
             Credentials::Certificate {
-                cert_path: cert_path.to_str().unwrap().into(),
+                cert_path: cert.path().to_str().unwrap().into(),
                 key_path: Some("/nonexistent/key.pem".into()),
             },
         )
         .build();
         assert!(result.is_err());
-        let _ = std::fs::remove_file(&cert_path);
     }
 
     #[test]
     fn builder_certificate_invalid_pem() {
-        let cert_path = std::env::temp_dir().join("test_cert_session2.pem");
-        std::fs::write(&cert_path, b"not-a-valid-pem").unwrap();
+        let mut cert = tempfile::NamedTempFile::new().unwrap();
+        std::io::Write::write_all(&mut cert, b"not-a-valid-pem").unwrap();
         let result = MqRestSession::builder(
             "https://host/ibmmq/rest/v2",
             "QM1",
             Credentials::Certificate {
-                cert_path: cert_path.to_str().unwrap().into(),
+                cert_path: cert.path().to_str().unwrap().into(),
                 key_path: None,
             },
         )
         .build();
         assert!(result.is_err());
-        let _ = std::fs::remove_file(&cert_path);
     }
 
     #[test]
