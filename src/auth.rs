@@ -123,14 +123,7 @@ fn extract_ltpa_token(response: &TransportResponse) -> Option<(String, String)> 
 #[cfg(test)]
 mod tests {
     use super::*;
-    use crate::test_helpers::MockTransport;
-
-    // Test password is sourced from the environment rather than hard-coded; the
-    // mock transport ignores credentials, so the value is incidental (defaults
-    // to empty when unset).
-    fn test_password() -> String {
-        std::env::var("MQ_TEST_PASSWORD").unwrap_or_default()
-    }
+    use crate::test_helpers::{MockTransport, test_secret};
 
     fn login_response_with_cookie(cookie_header: &str, cookie_value: &str) -> TransportResponse {
         let mut headers = HashMap::new();
@@ -152,7 +145,7 @@ mod tests {
             &transport,
             "https://host/ibmmq/rest/v2",
             "user",
-            &test_password(),
+            &test_secret(),
             Some("csrf"),
             Some(10.0),
             true,
@@ -172,7 +165,7 @@ mod tests {
             &transport,
             "https://host/ibmmq/rest/v2",
             "user",
-            &test_password(),
+            &test_secret(),
             None,
             None,
             false,
@@ -192,7 +185,7 @@ mod tests {
             &transport,
             "https://h",
             "u",
-            &test_password(),
+            &test_secret(),
             None,
             None,
             false,
@@ -212,7 +205,7 @@ mod tests {
             &transport,
             "https://h",
             "u",
-            &test_password(),
+            &test_secret(),
             None,
             None,
             false,
@@ -233,7 +226,7 @@ mod tests {
             &transport,
             "https://h",
             "u",
-            &test_password(),
+            &test_secret(),
             None,
             None,
             false,
@@ -252,7 +245,7 @@ mod tests {
             &transport,
             "https://h",
             "u",
-            &test_password(),
+            &test_secret(),
             None,
             None,
             false,
@@ -293,7 +286,7 @@ mod tests {
             &transport,
             "https://h",
             "u",
-            &test_password(),
+            &test_secret(),
             None,
             None,
             false,
@@ -313,7 +306,7 @@ mod tests {
             &transport,
             "https://h",
             "u",
-            &test_password(),
+            &test_secret(),
             None,
             None,
             false,
@@ -328,7 +321,7 @@ mod tests {
             &transport,
             "https://h",
             "u",
-            &test_password(),
+            &test_secret(),
             None,
             None,
             false,

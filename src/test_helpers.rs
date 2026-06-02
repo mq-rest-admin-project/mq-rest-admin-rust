@@ -138,7 +138,7 @@ pub fn mock_session(transport: MockTransport) -> MqRestSession {
         "QM1",
         Credentials::Basic {
             username: "admin".into(),
-            password: "admin".into(),
+            password: test_secret(),
         },
     )
     .map_attributes(false)
@@ -154,7 +154,7 @@ pub fn mock_session_with_mapping(transport: MockTransport) -> MqRestSession {
         "QM1",
         Credentials::Basic {
             username: "admin".into(),
-            password: "admin".into(),
+            password: test_secret(),
         },
     )
     .map_attributes(true)
@@ -162,4 +162,11 @@ pub fn mock_session_with_mapping(transport: MockTransport) -> MqRestSession {
     .transport(Box::new(transport))
     .build()
     .expect("mock session build failed")
+}
+
+/// Throwaway credential value for tests, sourced from the environment so it is
+/// never a hard-coded literal in source. Tests use mock transports that ignore
+/// the credential value (defaults to empty when unset).
+pub fn test_secret() -> String {
+    std::env::var("MQ_TEST_PASSWORD").unwrap_or_default()
 }
