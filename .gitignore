@@ -28,3 +28,6 @@ htmlcov/
 # Compiled output
 target/
 .worktrees/
+
+# Vergil tooling scratch (PR/session working dir)
+.vergil/

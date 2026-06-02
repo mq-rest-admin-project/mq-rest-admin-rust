@@ -123,7 +123,7 @@ fn extract_ltpa_token(response: &TransportResponse) -> Option<(String, String)> 
 #[cfg(test)]
 mod tests {
     use super::*;
-    use crate::test_helpers::MockTransport;
+    use crate::test_helpers::{MockTransport, test_secret};
 
     fn login_response_with_cookie(cookie_header: &str, cookie_value: &str) -> TransportResponse {
         let mut headers = HashMap::new();
@@ -145,7 +145,7 @@ mod tests {
             &transport,
             "https://host/ibmmq/rest/v2",
             "user",
-            "pass",
+            &test_secret(),
             Some("csrf"),
             Some(10.0),
             true,
@@ -165,7 +165,7 @@ mod tests {
             &transport,
             "https://host/ibmmq/rest/v2",
             "user",
-            "pass",
+            &test_secret(),
             None,
             None,
             false,
@@ -181,7 +181,15 @@ mod tests {
             "set-cookie",
             "LtpaToken2=token456; Path=/",
         )]);
-        let result = perform_ltpa_login(&transport, "https://h", "u", "p", None, None, false);
+        let result = perform_ltpa_login(
+            &transport,
+            "https://h",
+            "u",
+            &test_secret(),
+            None,
+            None,
+            false,
+        );
         let (name, value) = result.unwrap();
         assert_eq!(name, "LtpaToken2");
         assert_eq!(value, "token456");
@@ -193,7 +201,15 @@ mod tests {
             "Set-Cookie",
             "other=x, LtpaToken2=fromcomma; Path=/",
         )]);
-        let result = perform_ltpa_login(&transport, "https://h", "u", "p", None, None, false);
+        let result = perform_ltpa_login(
+            &transport,
+            "https://h",
+            "u",
+            &test_secret(),
+            None,
+            None,
+            false,
+        );
         let (name, value) = result.unwrap();
         assert_eq!(name, "LtpaToken2");
         assert_eq!(value, "fromcomma");
@@ -206,7 +222,15 @@ mod tests {
             text: "Unauthorized".into(),
             headers: HashMap::new(),
         }]);
-        let result = perform_ltpa_login(&transport, "https://h", "u", "p", None, None, false);
+        let result = perform_ltpa_login(
+            &transport,
+            "https://h",
+            "u",
+            &test_secret(),
+            None,
+            None,
+            false,
+        );
         assert!(format!("{:?}", result.unwrap_err()).starts_with("Auth"));
     }
 
@@ -217,7 +241,15 @@ mod tests {
             text: "{}".into(),
             headers: HashMap::new(),
         }]);
-        let result = perform_ltpa_login(&transport, "https://h", "u", "p", None, None, false);
+        let result = perform_ltpa_login(
+            &transport,
+            "https://h",
+            "u",
+            &test_secret(),
+            None,
+            None,
+            false,
+        );
         assert!(format!("{:?}", result.unwrap_err()).starts_with("Auth"));
     }
 
@@ -231,7 +263,7 @@ mod tests {
             &transport,
             "https://h",
             "u",
-            "p",
+            &test_secret(),
             Some("mytoken"),
             None,
             false,
@@ -250,7 +282,16 @@ mod tests {
             "Set-Cookie",
             "LtpaToken2=tok; Path=/",
         )]);
-        perform_ltpa_login(&transport, "https://h", "u", "p", None, None, false).unwrap();
+        perform_ltpa_login(
+            &transport,
+            "https://h",
+            "u",
+            &test_secret(),
+            None,
+            None,
+            false,
+        )
+        .unwrap();
         let requests = transport.requests();
         assert!(!requests[0].headers.contains_key("ibm-mq-rest-csrf-token"));
     }
@@ -261,14 +302,30 @@ mod tests {
             "Set-Cookie",
             "SomeOtherCookie=value; Path=/",
         )]);
-        let result = perform_ltpa_login(&transport, "https://h", "u", "p", None, None, false);
+        let result = perform_ltpa_login(
+            &transport,
+            "https://h",
+            "u",
+            &test_secret(),
+            None,
+            None,
+            false,
+        );
         assert!(format!("{:?}", result.unwrap_err()).starts_with("Auth"));
     }
 
     #[test]
     fn ltpa_login_transport_error() {
         let transport = MockTransport::new(vec![]);
-        let result = perform_ltpa_login(&transport, "https://h", "u", "p", None, None, false);
+        let result = perform_ltpa_login(
+            &transport,
+            "https://h",
+            "u",
+            &test_secret(),
+            None,
+            None,
+            false,
+        );
         assert!(result.is_err());
     }
 }

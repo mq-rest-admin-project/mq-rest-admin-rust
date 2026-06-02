@@ -842,7 +842,7 @@ mod tests {
     use super::*;
     use crate::test_helpers::{
         MockTransport, command_error_response, empty_success_response, error_response,
-        mock_session, mock_session_with_mapping, success_response,
+        mock_session, mock_session_with_mapping, success_response, test_secret,
     };
     use crate::transport::TransportResponse;
     use serde_json::json;
@@ -859,7 +859,7 @@ mod tests {
             "QM1",
             Credentials::Basic {
                 username: "u".into(),
-                password: "p".into(),
+                password: test_secret(),
             },
         )
         .transport(Box::new(transport))
@@ -877,7 +877,7 @@ mod tests {
             "QM1",
             Credentials::Basic {
                 username: "u".into(),
-                password: "p".into(),
+                password: test_secret(),
             },
         )
         .gateway_qmgr("GW1")
@@ -902,7 +902,7 @@ mod tests {
             "QM1",
             Credentials::Ltpa {
                 username: "u".into(),
-                password: "p".into(),
+                password: test_secret(),
             },
         )
         .transport(Box::new(transport))
@@ -921,7 +921,7 @@ mod tests {
             "QM1",
             Credentials::Basic {
                 username: "u".into(),
-                password: "p".into(),
+                password: test_secret(),
             },
         )
         .mapping_overrides(overrides)
@@ -940,7 +940,7 @@ mod tests {
             "QM1",
             Credentials::Basic {
                 username: "u".into(),
-                password: "p".into(),
+                password: test_secret(),
             },
         )
         .mapping_overrides(overrides)
@@ -957,7 +957,7 @@ mod tests {
             "QM1",
             Credentials::Basic {
                 username: "u".into(),
-                password: "p".into(),
+                password: test_secret(),
             },
         )
         .verify_tls(false)
@@ -1209,7 +1209,7 @@ mod tests {
             "QM1",
             Credentials::Basic {
                 username: "admin".into(),
-                password: "secret".into(),
+                password: test_secret(),
             },
         )
         .transport(Box::new(transport))
@@ -1234,7 +1234,7 @@ mod tests {
             "QM1",
             Credentials::Ltpa {
                 username: "u".into(),
-                password: "p".into(),
+                password: test_secret(),
             },
         )
         .transport(Box::new(transport))
@@ -1271,7 +1271,7 @@ mod tests {
             "QM1",
             Credentials::Basic {
                 username: "u".into(),
-                password: "p".into(),
+                password: test_secret(),
             },
         )
         .gateway_qmgr("GW1")
@@ -1290,7 +1290,7 @@ mod tests {
             "QM1",
             Credentials::Basic {
                 username: "u".into(),
-                password: "p".into(),
+                password: test_secret(),
             },
         )
         .csrf_token(None)
@@ -1554,7 +1554,7 @@ mod tests {
             "QM1",
             Credentials::Basic {
                 username: "u".into(),
-                password: "p".into(),
+                password: test_secret(),
             },
         )
         .transport(Box::new(transport))
@@ -1573,7 +1573,7 @@ mod tests {
             "QM1",
             Credentials::Basic {
                 username: "u".into(),
-                password: "p".into(),
+                password: test_secret(),
             },
         )
         .transport(Box::new(transport))
@@ -1591,7 +1591,7 @@ mod tests {
             "QM1",
             Credentials::Basic {
                 username: "u".into(),
-                password: "p".into(),
+                password: test_secret(),
             },
         )
         .transport(Box::new(transport))
@@ -1622,7 +1622,7 @@ mod tests {
             "QM1",
             Credentials::Basic {
                 username: "u".into(),
-                password: "p".into(),
+                password: test_secret(),
             },
         )
         .map_attributes(false)
@@ -1676,7 +1676,7 @@ mod tests {
             "QM1",
             Credentials::Basic {
                 username: "u".into(),
-                password: "p".into(),
+                password: test_secret(),
             },
         )
         .mapping_overrides(overrides)
@@ -1702,37 +1702,35 @@ mod tests {
 
     #[test]
     fn builder_certificate_missing_key_file() {
-        // Create a temp cert file
-        let cert_path = std::env::temp_dir().join("test_cert_session.pem");
-        std::fs::write(&cert_path, b"fake-cert").unwrap();
+        // Securely create a uniquely named temp cert file (auto-removed on drop).
+        let mut cert = tempfile::NamedTempFile::new().unwrap();
+        std::io::Write::write_all(&mut cert, b"fake-cert").unwrap();
         let result = MqRestSession::builder(
             "https://host/ibmmq/rest/v2",
             "QM1",
             Credentials::Certificate {
-                cert_path: cert_path.to_str().unwrap().into(),
+                cert_path: cert.path().to_str().unwrap().into(),
                 key_path: Some("/nonexistent/key.pem".into()),
             },
         )
         .build();
         assert!(result.is_err());
-        let _ = std::fs::remove_file(&cert_path);
     }
 
     #[test]
     fn builder_certificate_invalid_pem() {
-        let cert_path = std::env::temp_dir().join("test_cert_session2.pem");
-        std::fs::write(&cert_path, b"not-a-valid-pem").unwrap();
+        let mut cert = tempfile::NamedTempFile::new().unwrap();
+        std::io::Write::write_all(&mut cert, b"not-a-valid-pem").unwrap();
         let result = MqRestSession::builder(
             "https://host/ibmmq/rest/v2",
             "QM1",
             Credentials::Certificate {
-                cert_path: cert_path.to_str().unwrap().into(),
+                cert_path: cert.path().to_str().unwrap().into(),
                 key_path: None,
             },
         )
         .build();
         assert!(result.is_err());
-        let _ = std::fs::remove_file(&cert_path);
     }
 
     #[test]
@@ -1762,7 +1760,7 @@ mod tests {
             "QM1",
             Credentials::Basic {
                 username: "u".into(),
-                password: "p".into(),
+                password: test_secret(),
             },
         )
         .verify_tls(true)
@@ -1778,7 +1776,7 @@ mod tests {
             "QM1",
             Credentials::Basic {
                 username: "u".into(),
-                password: "p".into(),
+                password: test_secret(),
             },
         )
         .verify_tls(false)
@@ -1799,7 +1797,7 @@ mod tests {
             "QM1",
             Credentials::Basic {
                 username: "u".into(),
-                password: "p".into(),
+                password: test_secret(),
             },
         )
         .transport(Box::new(transport))
@@ -1820,7 +1818,7 @@ mod tests {
             "QM1",
             Credentials::Basic {
                 username: "u".into(),
-                password: "p".into(),
+                password: test_secret(),
             },
         )
         .transport(Box::new(transport))
@@ -1841,7 +1839,7 @@ mod tests {
             "QM1",
             Credentials::Basic {
                 username: "u".into(),
-                password: "p".into(),
+                password: test_secret(),
             },
         )
         .mapping_strict(false)
@@ -1863,7 +1861,7 @@ mod tests {
             "QM1",
             Credentials::Basic {
                 username: "u".into(),
-                password: "p".into(),
+                password: test_secret(),
             },
         )
         .mapping_strict(true)
@@ -1883,7 +1881,7 @@ mod tests {
             "QM1",
             Credentials::Basic {
                 username: "u".into(),
-                password: "p".into(),
+                password: test_secret(),
             },
         )
         .mapping_strict(true)
@@ -1903,7 +1901,7 @@ mod tests {
             "QM1",
             Credentials::Basic {
                 username: "u".into(),
-                password: "p".into(),
+                password: test_secret(),
             },
         )
         .mapping_strict(false)
@@ -1930,7 +1928,7 @@ mod tests {
             "QM1",
             Credentials::Basic {
                 username: "u".into(),
-                password: "p".into(),
+                password: test_secret(),
             },
         )
         .map_attributes(true)
@@ -1952,7 +1950,7 @@ mod tests {
             "QM1",
             Credentials::Basic {
                 username: "u".into(),
-                password: "p".into(),
+                password: test_secret(),
             },
         )
         .map_attributes(true)
@@ -1977,7 +1975,7 @@ mod tests {
             "QM1",
             Credentials::Basic {
                 username: "u".into(),
-                password: "p".into(),
+                password: test_secret(),
             },
         )
         .map_attributes(true)
@@ -2096,7 +2094,7 @@ mod tests {
 
     #[test]
     fn build_basic_auth_header_format() {
-        let header = build_basic_auth_header("admin", "secret");
+        let header = build_basic_auth_header("admin", &test_secret());
         assert!(header.starts_with("Basic "));
     }
 
@@ -2116,7 +2114,7 @@ mod tests {
             "QM1",
             Credentials::Basic {
                 username: "u".into(),
-                password: "p".into(),
+                password: test_secret(),
             },
         )
         .map_attributes(true)
@@ -2197,7 +2195,7 @@ mod tests {
             "QM1",
             Credentials::Basic {
                 username: "u".into(),
-                password: "p".into(),
+                password: test_secret(),
             },
         )
         .mapping_overrides(overrides)
@@ -2216,7 +2214,7 @@ mod tests {
             "QM1",
             Credentials::Ltpa {
                 username: "u".into(),
-                password: "p".into(),
+                password: test_secret(),
             },
         )
         .transport(Box::new(transport))
@@ -2286,7 +2284,7 @@ mod tests {
             csrf_token: None,
             credentials: Credentials::Ltpa {
                 username: "user".into(),
-                password: "pass".into(),
+                password: test_secret(),
             },
             mapping_data: json!({}),
             transport: Box::new(transport),
