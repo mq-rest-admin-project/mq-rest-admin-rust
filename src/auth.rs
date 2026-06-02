@@ -263,7 +263,7 @@ mod tests {
             &transport,
             "https://h",
             "u",
-            "p",
+            &test_secret(),
             Some("mytoken"),
             None,
             false,
