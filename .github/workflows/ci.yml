@@ -36,6 +36,7 @@ on:
 
 permissions:
   contents: read
+  actions: read
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
@@ -102,6 +103,7 @@ jobs:
     permissions:
       contents: read
       security-events: write
+      actions: read
 
   test:
     name: "test / unit / ${{ matrix.rust-version }}"
