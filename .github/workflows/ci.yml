@@ -43,7 +43,7 @@ concurrency:
 
 jobs:
   audit:
-    uses: vergil-project/vergil-actions/.github/workflows/ci-audit.yml@v2.0
+    uses: vergil-project/vergil-actions/.github/workflows/ci-audit.yml@v2.1
     with:
       language: rust
       versions: ${{ inputs.rust-versions || '["1.92", "1.93"]' }}
@@ -88,13 +88,13 @@ jobs:
         run: cargo test --features integration,examples
 
   quality:
-    uses: vergil-project/vergil-actions/.github/workflows/ci-quality.yml@v2.0
+    uses: vergil-project/vergil-actions/.github/workflows/ci-quality.yml@v2.1
     with:
       language: rust
       versions: ${{ inputs.rust-versions || '["1.92", "1.93"]' }}
 
   security:
-    uses: vergil-project/vergil-actions/.github/workflows/ci-security.yml@v2.0
+    uses: vergil-project/vergil-actions/.github/workflows/ci-security.yml@v2.1
     with:
       language: rust
       run-standards: ${{ inputs.run-release != 'false' }}
@@ -136,7 +136,7 @@ jobs:
           --fail-under-regions ${{ matrix.coverage-regions }}
 
   version:
-    uses: vergil-project/vergil-actions/.github/workflows/ci-version-bump.yml@v2.0
+    uses: vergil-project/vergil-actions/.github/workflows/ci-version-bump.yml@v2.1
     with:
       language: rust
       run-release: ${{ inputs.run-release != 'false' }}
