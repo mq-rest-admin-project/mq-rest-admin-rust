@@ -36,6 +36,7 @@ on:
 
 permissions:
   contents: read
+  actions: read
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
@@ -43,7 +44,7 @@ concurrency:
 
 jobs:
   audit:
-    uses: vergil-project/vergil-actions/.github/workflows/ci-audit.yml@v2.0
+    uses: vergil-project/vergil-actions/.github/workflows/ci-audit.yml@v2.1
     with:
       language: rust
       versions: ${{ inputs.rust-versions || '["1.92", "1.93"]' }}
@@ -88,13 +89,13 @@ jobs:
         run: cargo test --features integration,examples
 
   quality:
-    uses: vergil-project/vergil-actions/.github/workflows/ci-quality.yml@v2.0
+    uses: vergil-project/vergil-actions/.github/workflows/ci-quality.yml@v2.1
     with:
       language: rust
       versions: ${{ inputs.rust-versions || '["1.92", "1.93"]' }}
 
   security:
-    uses: vergil-project/vergil-actions/.github/workflows/ci-security.yml@v2.0
+    uses: vergil-project/vergil-actions/.github/workflows/ci-security.yml@v2.1
     with:
       language: rust
       run-standards: ${{ inputs.run-release != 'false' }}
@@ -102,6 +103,7 @@ jobs:
     permissions:
       contents: read
       security-events: write
+      actions: read
 
   test:
     name: "test / unit / ${{ matrix.rust-version }}"
@@ -136,7 +138,7 @@ jobs:
           --fail-under-regions ${{ matrix.coverage-regions }}
 
   version:
-    uses: vergil-project/vergil-actions/.github/workflows/ci-version-bump.yml@v2.0
+    uses: vergil-project/vergil-actions/.github/workflows/ci-version-bump.yml@v2.1
     with:
       language: rust
       run-release: ${{ inputs.run-release != 'false' }}
