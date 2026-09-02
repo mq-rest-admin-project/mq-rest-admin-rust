@@ -47,7 +47,6 @@ jobs:
     uses: vergil-project/vergil-actions/.github/workflows/ci-audit.yml@v2.1
     with:
       language: rust
-      versions: ${{ inputs.rust-versions || '["1.92", "1.93"]' }}
       container-suffix: rust
 
   integration-tests:
@@ -92,7 +91,6 @@ jobs:
     uses: vergil-project/vergil-actions/.github/workflows/ci-quality.yml@v2.1
     with:
       language: rust
-      versions: ${{ inputs.rust-versions || '["1.92", "1.93"]' }}
 
   security:
     uses: vergil-project/vergil-actions/.github/workflows/ci-security.yml@v2.1
