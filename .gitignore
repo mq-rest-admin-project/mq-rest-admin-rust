@@ -1,23 +1,46 @@
+# >>> vergil-managed: base (managed by vrg-gitignore-sync; do not edit) >>>
+*.swp
+*.swo
+*~
+*.bak
+.idea/
+.vscode/
+.DS_Store
+Thumbs.db
+.env
+.env.*
+*.log
+.venv/
+.worktrees/
+.vergil/
+.superpowers/
+.claude/scheduled_tasks.lock
+.claude/settings.local.json
+build/
+dist/
+coverage.xml
+junit.xml
+licenses.json
+docs/site/site/
+docs/site/docs/changelog.md
+docs/site/docs/releases/
+mkdocs.staged.yml
+node_modules/
+# <<< vergil-managed <<<
+
 # === Shared entries (all mq-rest-admin repos) ===
 
 # Editor and IDE files
-.vscode/
-.idea/
 
 # OS files
-.DS_Store
-Thumbs.db
 
 # Documentation build output
 docs/_build/
-docs/site/site/
 /site
 
 # Coverage reports
 coverage.out
-coverage.xml
 htmlcov/
-.coverage
 .coverage.*
 
 # Common repo symlink (MkDocs shared fragments)
@@ -27,7 +50,5 @@ htmlcov/
 
 # Compiled output
 target/
-.worktrees/
 
 # Vergil tooling scratch (PR/session working dir)
-.vergil/
